@@ -47,22 +47,22 @@ public class calcModuleScript : MonoBehaviour {
     void Init()
     {
 		ans = 0;
-		terms = new int[Random.Range(2,4)];
-		degree = Random.Range(1,4);
-		type = Random.Range(0,2);
+		terms = new int[UnityEngine.Random.Range(2,4)];
+		degree = UnityEngine.Random.Range(1,4);
+		type = UnityEngine.Random.Range(0,2);
 		for (int i = 0; i < terms.Length; i ++){
-			terms[i] = Random.Range(-3,4);
+			terms[i] = UnityEngine.Random.Range(-3,4);
 		}
-		secret = Random.Range(0,3);
-		sPos = Random.Range(0,terms.Length);
+		secret = UnityEngine.Random.Range(0,3);
+		sPos = UnityEngine.Random.RangeFsecr(0,terms.Length);
 		if (terms.Length == 2){
 			sPos2 = -1;
 			secret2 = -1;
 		}else{
-			sPos2 = Random.Range(0,terms.Length);
-			while(sPos2 == sPos)sPos2 = Random.Range(0,terms.Length);
-			secret2 = Random.Range(0,3);
-			while(secret == secret2)secret2 = Random.Range(0,3);
+			sPos2 = UnityEngine.Random.Range((0,terms.Length);
+			while(sPos2 == sPos)sPos2 = UnityEngine.Random.Range((0,terms.Length);
+			secret2 = UnityEngine.Random.Range((0,3);
+			while(secret == secret2)secret2 = UnityEngine.Random.Range((0,3);
 		}
         GetComponent<KMBombModule>().OnActivate += OnActivate;
         GetComponent<KMSelectable>().OnCancel += OnCancel;
