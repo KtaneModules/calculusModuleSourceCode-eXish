@@ -47,22 +47,22 @@ public class calcModuleScript : MonoBehaviour {
     void Init()
     {
 		ans = 0;
-		terms = new int[UnityEngine.Random.Range(2,4)];
-		degree = UnityEngine.Random.Range(1,4);
-		type = UnityEngine.Random.Range(0,2);
+		terms = new int[Random.Range(2,4)];
+		degree = Random.Range(1,4);
+		type = Random.Range(0,2);
 		for (int i = 0; i < terms.Length; i ++){
-			terms[i] = UnityEngine.Random.Range(-3,4);
+			terms[i] = Random.Range(-3,4);
 		}
-		secret = UnityEngine.Random.Range(0,3);
-		sPos = UnityEngine.Random.RangeFsecr(0,terms.Length);
+		secret = Random.Range(0,3);
+		sPos = Random.Range(0,terms.Length);
 		if (terms.Length == 2){
 			sPos2 = -1;
 			secret2 = -1;
 		}else{
-			sPos2 = UnityEngine.Random.Range((0,terms.Length);
-			while(sPos2 == sPos)sPos2 = UnityEngine.Random.Range((0,terms.Length);
-			secret2 = UnityEngine.Random.Range((0,3);
-			while(secret == secret2)secret2 = UnityEngine.Random.Range((0,3);
+			sPos2 = Random.Range(0,terms.Length);
+			while(sPos2 == sPos)sPos2 = Random.Range(0,terms.Length);
+			secret2 = Random.Range(0,3);
+			while(secret == secret2)secret2 = Random.Range(0,3);
 		}
         GetComponent<KMBombModule>().OnActivate += OnActivate;
         GetComponent<KMSelectable>().OnCancel += OnCancel;
@@ -122,7 +122,10 @@ public class calcModuleScript : MonoBehaviour {
         {
             portCount ++;
         }
-		if(secret == 0)sNum = (int)(batteryCount);
+        batteryCount %= 10;
+        labelCount %= 10;
+        portCount %= 10;
+        if(secret == 0)sNum = (int)(batteryCount);
 		else if(secret == 1)sNum = (int)(labelCount);
 		else sNum = (int)(portCount);
 		if(secret2 == 0)sNum2 = (int)(batteryCount);
@@ -147,7 +150,8 @@ public class calcModuleScript : MonoBehaviour {
 		if (type == 0){
 			while ((total * degree) >= 10 || (total * degree) <= -10){
 				total = 0;
-				for (int i = 0; i < terms.Length; i ++){
+                degree = Random.Range(1, 4);
+                for (int i = 0; i < terms.Length; i ++){
 					terms[i] = Random.Range(-3,4);
 				}
 				for (int i = 0; i < terms.Length; i ++){
@@ -164,7 +168,8 @@ public class calcModuleScript : MonoBehaviour {
 		}else if (type == 1){
 			while ((int)(Mathf.Floor((float)total / (float)(degree + 1))) >= 10 || (int)(Mathf.Floor((float)total / (float)(degree + 1))) <= -10 || (Mathf.Floor((float)total / (float)(degree + 1))) % 1.0f != 0.0f){
 				total = 0;
-				for (int i = 0; i < terms.Length; i ++){
+                degree = Random.Range(1, 4);
+                for (int i = 0; i < terms.Length; i ++){
 					terms[i] = Random.Range(-3,4);
 				}
 				for (int i = 0; i < terms.Length; i ++){
@@ -182,14 +187,14 @@ public class calcModuleScript : MonoBehaviour {
 		for (int i = 0; i < terms.Length; i ++){
 			if (i > 0)equation.text += " + ";
 			if (sPos == i){
-				string lett = "b";
-				if (secret == 1)lett = "r";
-				else if (secret == 2)lett = "k";
+				string lett = "B";
+				if (secret == 1)lett = "R";
+				else if (secret == 2)lett = "K";
 				equation.text += lett + "x^" + degree;
 			}else if (sPos2 == i){
-				string lett = "z";
-				if (secret2 == 1)lett = "f";
-				else if (secret2 == 2)lett = "m";
+				string lett = "Z";
+				if (secret2 == 1)lett = "F";
+				else if (secret2 == 2)lett = "M";
 				equation.text += lett + "x^" + degree;
 			}else{
 				equation.text += terms[i] + "x^" + degree;
@@ -199,22 +204,29 @@ public class calcModuleScript : MonoBehaviour {
 		if (type == 1)ansField.text += "x^"+ (degree + 1);
 		else ansField.text += "x^"+ (degree - 1);
         //logging
-        Debug.LogFormat("[Calc #{0}] The equation is {1}", moduleId, equation.text);
+        Debug.LogFormat("[Calculus #{0}] The equation is {1}", moduleId, equation.text);
         if(type == 1)
         {
-            Debug.LogFormat("[Calc #{0}] The answer's degree is {1}, meaning that an Integral must be taken", moduleId, degree+1);
-            Debug.LogFormat("[Calc #{0}] The correct answer to the calculus equation is {1}", moduleId, cAns + "x^" + (degree+1));
+            Debug.LogFormat("[Calculus #{0}] The answer's degree is {1}, meaning that an Integral must be taken", moduleId, degree+1);
+            Debug.LogFormat("[Calculus #{0}] The correct answer to the calculus equation is {1}", moduleId, cAns + "x^" + (degree+1));
         }
         else
         {
-            Debug.LogFormat("[Calc #{0}] The answer's degree is {1}, meaning that a Derivative must be taken", moduleId, degree-1);
-            Debug.LogFormat("[Calc #{0}] The correct answer to the calculus equation is {1}", moduleId, cAns + "x^" + (degree-1));
+            Debug.LogFormat("[Calculus #{0}] The answer's degree is {1}, meaning that a Derivative must be taken", moduleId, degree-1);
+            Debug.LogFormat("[Calculus #{0}] The correct answer to the calculus equation is {1}", moduleId, cAns + "x^" + (degree-1));
         }
     }
 	void changeAnswer(bool positive){
-		KMAudio.PlaySoundAtTransform("tick", this.transform);
-		if(positive)upAns.AddInteractionPunch();
-		else downAns.AddInteractionPunch();
+        if (positive)
+        {
+            upAns.AddInteractionPunch();
+            KMAudio.PlaySoundAtTransform("tick", upAns.transform);
+        }
+        else
+        {
+            downAns.AddInteractionPunch();
+            KMAudio.PlaySoundAtTransform("tick", downAns.transform);
+        }
 		if (started){
 			if (positive && ans < 9){
 				ans ++;
@@ -231,15 +243,17 @@ public class calcModuleScript : MonoBehaviour {
 	}
 	void submitAnser(){
 		submit.AddInteractionPunch();
-		if (started && ! solved){
+		if (started && !solved){
 			if (cAns == ans){
-				KMAudio.PlaySoundAtTransform("tick", this.transform);
-				BombModule.HandlePass();
+				KMAudio.PlaySoundAtTransform("tick", submit.transform);
+                Debug.LogFormat("[Calculus #{0}] Submitted answer: {1}, which is correct! Module disarmed!", moduleId, ans + "x^" + ansField.text.Substring(ansField.text.Length-1));
+                BombModule.HandlePass();
 				solved = true;
 			}else{
-				BombModule.HandleStrike();
+                Debug.LogFormat("[Calculus #{0}] Submitted answer: {1}, which is incorrect! Strike!", moduleId, ans + "x^" + ansField.text.Substring(ansField.text.Length - 1));
+                BombModule.HandleStrike();
 			}
-		}else KMAudio.PlaySoundAtTransform("tick", this.transform);
+		}else KMAudio.PlaySoundAtTransform("tick", submit.transform);
 	}
     bool OnCancel()
     {
@@ -256,7 +270,7 @@ public class calcModuleScript : MonoBehaviour {
         {
             return false;
         }
-        int temp = System.Int32.Parse(cmd);
+        int temp = int.Parse(cmd);
         if(temp >= -9 && temp <= 9)
         {
             return true;
@@ -268,24 +282,29 @@ public class calcModuleScript : MonoBehaviour {
     }
 
     #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"!{0} submit <num> [Submits the answer with the coefficient of <num>, valid answers range from -9 to 9]";
+    private readonly string TwitchHelpMessage = @"!{0} submit <num> [Submits the answer with the coefficient of <num>] | Valid answers range from -9 to 9";
     #pragma warning restore 414
     IEnumerator ProcessTwitchCommand(string command)
     {
         string[] parameters = command.Split(' ');
         if (Regex.IsMatch(parameters[0], @"^\s*submit\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
         {
-            if(parameters.Length == 2)
+            yield return null;
+            if (parameters.Length > 2)
+            {
+                yield return "sendtochaterror Too many parameters!";
+            }
+            else if (parameters.Length == 2)
             {
                 if (inputIsValid(parameters[1]))
                 {
-                    yield return null;
                     int temp = 0;
                     int.TryParse(parameters[1], out temp);
-                    if(ans == temp)
+                    if (ans == temp)
                     {
                         submit.OnInteract();
-                    }else if (ans < temp)
+                    }
+                    else if (ans < temp)
                     {
                         for(int i = ans; i < temp; i++)
                         {
@@ -303,9 +322,23 @@ public class calcModuleScript : MonoBehaviour {
                         }
                         submit.OnInteract();
                     }
+                    yield return new WaitForSeconds(0.1f);
                 }
+                else
+                {
+                    yield return "sendtochaterror The specified answer to submit '" + parameters[1] + "' is invalid!";
+                }
+            }
+            else if (parameters.Length == 1)
+            {
+                yield return "sendtochaterror Please specify an answer to submit!";
             }
             yield break;
         }
+    }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        yield return ProcessTwitchCommand("submit "+cAns);
     }
 }
