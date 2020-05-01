@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
 using UnityEngine;
+using System.Text.RegularExpressions;
 
 public class calcModuleScript : MonoBehaviour {
 
@@ -30,10 +31,15 @@ public class calcModuleScript : MonoBehaviour {
 	int ans;
 	int cAns;
 	int type; //0 is Derivative. 1 is Integral.
-	
-	 void Start()
+
+    //necessary for logging
+    static int moduleIdCounter = 1;
+    int moduleId;
+
+    void Start()
     {
-		started = false;
+        moduleId = moduleIdCounter++;
+        started = false;
 		solved = false;
         Init();
     }
@@ -41,22 +47,22 @@ public class calcModuleScript : MonoBehaviour {
     void Init()
     {
 		ans = 0;
-		terms = new int[Random.Range(2,4)];
-		degree = Random.Range(1,4);
-		type = Random.Range(0,2);
+		terms = new int[UnityEngine.Random.Range(2,4)];
+		degree = UnityEngine.Random.Range(1,4);
+		type = UnityEngine.Random.Range(0,2);
 		for (int i = 0; i < terms.Length; i ++){
-			terms[i] = Random.Range(-3,4);
+			terms[i] = UnityEngine.Random.Range(-3,4);
 		}
-		secret = Random.Range(0,3);
-		sPos = Random.Range(0,terms.Length);
+		secret = UnityEngine.Random.Range(0,3);
+		sPos = UnityEngine.Random.RangeFsecr(0,terms.Length);
 		if (terms.Length == 2){
 			sPos2 = -1;
 			secret2 = -1;
 		}else{
-			sPos2 = Random.Range(0,terms.Length);
-			while(sPos2 == sPos)sPos2 = Random.Range(0,terms.Length);
-			secret2 = Random.Range(0,3);
-			while(secret == secret2)secret2 = Random.Range(0,3);
+			sPos2 = UnityEngine.Random.Range((0,terms.Length);
+			while(sPos2 == sPos)sPos2 = UnityEngine.Random.Range((0,terms.Length);
+			secret2 = UnityEngine.Random.Range((0,3);
+			while(secret == secret2)secret2 = UnityEngine.Random.Range((0,3);
 		}
         GetComponent<KMBombModule>().OnActivate += OnActivate;
         GetComponent<KMSelectable>().OnCancel += OnCancel;
@@ -192,6 +198,18 @@ public class calcModuleScript : MonoBehaviour {
 		ansField.text = ans + "";
 		if (type == 1)ansField.text += "x^"+ (degree + 1);
 		else ansField.text += "x^"+ (degree - 1);
+        //logging
+        Debug.LogFormat("[Calc #{0}] The equation is {1}", moduleId, equation.text);
+        if(type == 1)
+        {
+            Debug.LogFormat("[Calc #{0}] The answer's degree is {1}, meaning that an Integral must be taken", moduleId, degree+1);
+            Debug.LogFormat("[Calc #{0}] The correct answer to the calculus equation is {1}", moduleId, cAns + "x^" + (degree+1));
+        }
+        else
+        {
+            Debug.LogFormat("[Calc #{0}] The answer's degree is {1}, meaning that a Derivative must be taken", moduleId, degree-1);
+            Debug.LogFormat("[Calc #{0}] The correct answer to the calculus equation is {1}", moduleId, cAns + "x^" + (degree-1));
+        }
     }
 	void changeAnswer(bool positive){
 		KMAudio.PlaySoundAtTransform("tick", this.transform);
@@ -228,5 +246,66 @@ public class calcModuleScript : MonoBehaviour {
         //Debug.Log("ExampleModule2 cancel.");
 
         return true;
+    }
+
+    //twitch plays
+    private bool inputIsValid(string cmd)
+    {
+        string[] validstuff = { "-9", "-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+        if (!validstuff.Contains(cmd))
+        {
+            return false;
+        }
+        int temp = System.Int32.Parse(cmd);
+        if(temp >= -9 && temp <= 9)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    #pragma warning disable 414
+    private readonly string TwitchHelpMessage = @"!{0} submit <num> [Submits the answer with the coefficient of <num>, valid answers range from -9 to 9]";
+    #pragma warning restore 414
+    IEnumerator ProcessTwitchCommand(string command)
+    {
+        string[] parameters = command.Split(' ');
+        if (Regex.IsMatch(parameters[0], @"^\s*submit\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            if(parameters.Length == 2)
+            {
+                if (inputIsValid(parameters[1]))
+                {
+                    yield return null;
+                    int temp = 0;
+                    int.TryParse(parameters[1], out temp);
+                    if(ans == temp)
+                    {
+                        submit.OnInteract();
+                    }else if (ans < temp)
+                    {
+                        for(int i = ans; i < temp; i++)
+                        {
+                            upAns.OnInteract();
+                            yield return new WaitForSeconds(0.1f);
+                        }
+                        submit.OnInteract();
+                    }
+                    else if (ans > temp)
+                    {
+                        for (int i = ans; i > temp; i--)
+                        {
+                            downAns.OnInteract();
+                            yield return new WaitForSeconds(0.1f);
+                        }
+                        submit.OnInteract();
+                    }
+                }
+            }
+            yield break;
+        }
     }
 }

@@ -235,7 +235,7 @@ GameObject:
   - component: {fileID: 114359205521807460}
   - component: {fileID: 114648680380321596}
   - component: {fileID: 114664724708017398}
-  - component: {fileID: 114483649705907002}
+  - component: {fileID: 114277729043265692}
   m_Layer: 0
   m_Name: CalcModule
   m_TagString: Untagged
@@ -792,7 +792,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 765fb49904a174c428d740bb8031fe9a, type: 2}
+  - {fileID: 2100000, guid: 9af52e38fb41bfb42a724d7599f1fe37, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1412,6 +1412,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShaderNames:
   - GUI/KT 3D Text
+--- !u!114 &114277729043265692
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1643804967883958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 404b036555fd25d4587023251c5c2eeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BombInfo: {fileID: 114648680380321596}
+  BombModule: {fileID: 114111538665685662}
+  KMAudio: {fileID: 114664724708017398}
+  upAns: {fileID: 114383890890074200}
+  downAns: {fileID: 114567335252286132}
+  submit: {fileID: 114907485814458000}
+  equation: {fileID: 102178251166281354}
+  ansField: {fileID: 102604427207938682}
 --- !u!114 &114359205521807460
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1473,25 +1492,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShaderNames:
   - GUI/KT 3D Text
---- !u!114 &114483649705907002
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1643804967883958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 404b036555fd25d4587023251c5c2eeb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BombInfo: {fileID: 114648680380321596}
-  BombModule: {fileID: 114111538665685662}
-  KMAudio: {fileID: 114664724708017398}
-  upAns: {fileID: 114383890890074200}
-  downAns: {fileID: 114567335252286132}
-  submit: {fileID: 114907485814458000}
-  equation: {fileID: 102178251166281354}
-  ansField: {fileID: 102604427207938682}
 --- !u!114 &114567335252286132
 MonoBehaviour:
   m_ObjectHideFlags: 1
