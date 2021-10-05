@@ -131,12 +131,16 @@ public class calcModuleScript : MonoBehaviour {
 		if(secret2 == 0)sNum2 = (int)(batteryCount);
 		else if(secret2 == 1)sNum2 = (int)(labelCount);
 		else sNum2 = (int)(portCount);
-		while(sNum + sNum2 >= 10){
-			float temp1 = (float)(sNum) / 2.0f;
-			float temp2 = (float)(sNum2) / 2.0f;
-			sNum = (int)(Mathf.Floor(temp1));
-			sNum2 = (int)(Mathf.Floor(temp2));
-		}
+        if (sNum2 != -1)
+        {
+            while (sNum + sNum2 >= 10)
+            {
+                float temp1 = (float)(sNum) / 2.0f;
+                float temp2 = (float)(sNum2) / 2.0f;
+                sNum = (int)(Mathf.Floor(temp1));
+                sNum2 = (int)(Mathf.Floor(temp2));
+            }
+        }
 		int total = 0;
 		for (int i = 0; i < terms.Length; i ++){
 			if (sPos == i){
