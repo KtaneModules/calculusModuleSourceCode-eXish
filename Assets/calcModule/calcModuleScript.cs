@@ -131,7 +131,7 @@ public class calcModuleScript : MonoBehaviour {
 		if(secret2 == 0)sNum2 = (int)(batteryCount);
 		else if(secret2 == 1)sNum2 = (int)(labelCount);
 		else sNum2 = (int)(portCount);
-        if (sNum2 != -1)
+        if (sPos2 != -1)
         {
             while (sNum + sNum2 >= 10)
             {
